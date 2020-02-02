@@ -9,10 +9,13 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 direction;
     private BoxCollider2D boxCollider;
+    private float playerHalfWidth;
 
     void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
+
+        playerHalfWidth = boxCollider.bounds.max.y - boxCollider.bounds.center.y;
     }
 
     void Update()
@@ -31,9 +34,9 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        float dstToCenter = Mathf.Abs(boxCollider.bounds.max.y - boxCollider.bounds.center.y);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * dstToCenter, transform.up, speed * Time.deltaTime);
-        Debug.DrawRay(transform.position + transform.up * dstToCenter, transform.up * speed * Time.deltaTime, Color.red);
+        //float dstToCenter = Mathf.Abs(boxCollider.bounds.max.y - boxCollider.bounds.center.y);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * playerHalfWidth, transform.up, speed * Time.deltaTime);
+        Debug.DrawRay(transform.position + transform.up * playerHalfWidth, transform.up * speed * Time.deltaTime, Color.red);
 
         if (hit)
         {
@@ -48,13 +51,19 @@ public class PlayerController : MonoBehaviour
 
     private void RaycastForward()
     {
+
         //RaycastHit2D hit = Physics2D.Raycast(new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.max.y), transform.up * 5);
     }
 
     private void HandleInputUp()
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
+            // Raycast from left and right bounds
+            RaycastHit2D hitLeft = Physics2D.Raycast(new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.max.y), Vector2.up);
+            RaycastHit2D hitRight = Physics2D.Raycast(new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.max.y), Vector2.up);
+            Debug.DrawRay(new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.max.y), Vector2.up, Color.red);
+            Debug.DrawRay(new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.max.y), Vector2.up, Color.red);
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
         }
     }

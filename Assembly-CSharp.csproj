@@ -62,7 +62,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\HandleInput.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/jpdep/Desktop/Unity/Toka Man/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
