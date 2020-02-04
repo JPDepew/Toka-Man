@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInputUp()
     {
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             // Raycast from left and right bounds
 
@@ -105,11 +105,11 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.max.y), Vector2.up, Color.red);
             Debug.DrawRay(new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.max.y), Vector2.up, Color.red);
 
-            if (hitLeft.distance > 0)
+            if (hitLeft.distance > 0.01f)
             {
                 leftRayClear = true;
             }
-            if (hitRight.distance > 0)
+            if (hitRight.distance > 0.01f)
             {
                 rightRayClear = true;
             }
@@ -118,9 +118,10 @@ public class PlayerController : MonoBehaviour
                 shouldTurn = true;
             }
 
-            if (hitLeft.distance > 0 && hitRight.distance > 0 || shouldTurn)
+            if (hitLeft.distance > 0.001f && hitRight.distance > 0.001f || shouldTurn)
             {
                 transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                transform.position = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
                 break;
             }
             yield return null;
