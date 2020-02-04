@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float speed = 10;
+    public float turnTimeout = 0.5f;
+    public float boundsOffset = 0.02f;
 
     private Vector2 direction;
     private BoxCollider2D boxCollider;
@@ -60,11 +62,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             // Raycast from left and right bounds
-            RaycastHit2D hitLeft = Physics2D.Raycast(new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.max.y), Vector2.up);
-            RaycastHit2D hitRight = Physics2D.Raycast(new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.max.y), Vector2.up);
-            Debug.DrawRay(new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.max.y), Vector2.up, Color.red);
-            Debug.DrawRay(new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.max.y), Vector2.up, Color.red);
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
+            StopAllCoroutines();
+            StartCoroutine(MoveUpTimeout());
         }
     }
 
@@ -89,6 +89,41 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+        }
+    }
+
+    private IEnumerator MoveUpTimeout()
+    {
+        float targetTime = Time.time + turnTimeout;
+        bool leftRayClear = false;
+        bool rightRayClear = false;
+        bool shouldTurn = false;
+        while (Time.time < targetTime)
+        {
+            RaycastHit2D hitLeft = Physics2D.Raycast(new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.max.y), Vector2.up);
+            RaycastHit2D hitRight = Physics2D.Raycast(new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.max.y), Vector2.up);
+            Debug.DrawRay(new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.max.y), Vector2.up, Color.red);
+            Debug.DrawRay(new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.max.y), Vector2.up, Color.red);
+
+            if (hitLeft.distance > 0)
+            {
+                leftRayClear = true;
+            }
+            if (hitRight.distance > 0)
+            {
+                rightRayClear = true;
+            }
+            if (leftRayClear && rightRayClear)
+            {
+                shouldTurn = true;
+            }
+
+            if (hitLeft.distance > 0 && hitRight.distance > 0 || shouldTurn)
+            {
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                break;
+            }
+            yield return null;
         }
     }
 }
