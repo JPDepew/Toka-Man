@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 direction;
     private BoxCollider2D boxCollider;
     private float playerHalfWidth;
+    private const float hitDstOffset = 0.001f;
+    private enum Direction { UP, DOWN, LEFT, RIGHT }
 
     void Start()
     {
@@ -36,7 +38,6 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        //float dstToCenter = Mathf.Abs(boxCollider.bounds.max.y - boxCollider.bounds.center.y);
         RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * playerHalfWidth, transform.up, speed * Time.deltaTime);
         Debug.DrawRay(transform.position + transform.up * playerHalfWidth, transform.up * speed * Time.deltaTime, Color.red);
 
@@ -51,20 +52,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void RaycastForward()
-    {
-
-        //RaycastHit2D hit = Physics2D.Raycast(new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.max.y), transform.up * 5);
-    }
-
     private void HandleInputUp()
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            // Raycast from left and right bounds
-
             StopAllCoroutines();
-            StartCoroutine(MoveUpTimeout());
+            StartCoroutine(MoveTimeout(Direction.UP));
         }
     }
 
@@ -72,7 +65,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
+            StopAllCoroutines();
+            StartCoroutine(MoveTimeout(Direction.DOWN));
         }
     }
 
@@ -80,7 +74,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90));
+            StopAllCoroutines();
+            StartCoroutine(MoveTimeout(Direction.RIGHT));
         }
     }
 
@@ -88,11 +83,12 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+            StopAllCoroutines();
+            StartCoroutine(MoveTimeout(Direction.LEFT));
         }
     }
 
-    private IEnumerator MoveUpTimeout()
+    private IEnumerator MoveTimeout(Direction direction)
     {
         float targetTime = Time.time + turnTimeout;
         bool leftRayClear = false;
@@ -100,16 +96,13 @@ public class PlayerController : MonoBehaviour
         bool shouldTurn = false;
         while (Time.time < targetTime)
         {
-            RaycastHit2D hitLeft = Physics2D.Raycast(new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.max.y), Vector2.up);
-            RaycastHit2D hitRight = Physics2D.Raycast(new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.max.y), Vector2.up);
-            Debug.DrawRay(new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.max.y), Vector2.up, Color.red);
-            Debug.DrawRay(new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.max.y), Vector2.up, Color.red);
+            (RaycastHit2D hit1, RaycastHit2D hit2) = RaycastsBasedOnDirection(direction);
 
-            if (hitLeft.distance > 0.01f)
+            if (hit1.distance > 0.01f)
             {
                 leftRayClear = true;
             }
-            if (hitRight.distance > 0.01f)
+            if (hit2.distance > 0.01f)
             {
                 rightRayClear = true;
             }
@@ -118,13 +111,72 @@ public class PlayerController : MonoBehaviour
                 shouldTurn = true;
             }
 
-            if (hitLeft.distance > 0.001f && hitRight.distance > 0.001f || shouldTurn)
+            if (hit1.distance > hitDstOffset && hit2.distance > hitDstOffset || shouldTurn)
             {
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                transform.rotation = GetQuaternionDirection(direction);
                 transform.position = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
                 break;
             }
             yield return null;
+        }
+    }
+
+    private (RaycastHit2D, RaycastHit2D) RaycastsBasedOnDirection(Direction direction)
+    {
+        Vector2 vector1;
+        Vector2 vector2;
+        Vector2 directionVector;
+        switch (direction)
+        {
+            case Direction.UP:
+                vector1 = new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.max.y);
+                vector2 = new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.max.y);
+                directionVector = Vector2.up;
+                break;
+            case Direction.DOWN:
+                vector1 = new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.min.y);
+                vector2 = new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.min.y);
+                directionVector = Vector2.down;
+                break;
+            case Direction.LEFT:
+                vector1 = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.min.y + boundsOffset);
+                vector2 = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.max.y - boundsOffset);
+                directionVector = Vector2.left;
+                break;
+            case Direction.RIGHT:
+                vector1 = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.min.y + boundsOffset);
+                vector2 = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.max.y - boundsOffset);
+                directionVector = Vector2.right;
+                break;
+            default:
+                vector1 = new Vector2();
+                vector2 = new Vector2();
+                directionVector = new Vector2();
+                break;
+        }
+
+        RaycastHit2D hit1 = Physics2D.Raycast(vector1, directionVector);
+        RaycastHit2D hit2 = Physics2D.Raycast(vector2, directionVector);
+        Debug.DrawRay(vector1, directionVector, Color.red);
+        Debug.DrawRay(vector2, directionVector, Color.red);
+
+        return (hit1, hit2);
+    }
+
+    private Quaternion GetQuaternionDirection(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.UP:
+                return Quaternion.Euler(new Vector3(0, 0, 0));
+            case Direction.DOWN:
+                return Quaternion.Euler(new Vector3(0, 0, 180));
+            case Direction.LEFT:
+                return Quaternion.Euler(new Vector3(0, 0, 90));
+            case Direction.RIGHT:
+                return Quaternion.Euler(new Vector3(0, 0, -90));
+            default:
+                return Quaternion.Euler(new Vector3());
         }
     }
 }

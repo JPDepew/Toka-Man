@@ -182,139 +182,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Background_Test_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 150
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: af7c7cae1d3977ff0800000000000000
-      internalID: -38399542012950534
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Background_Test_1
-      rect:
-        serializedVersion: 2
-        x: 150
-        y: 150
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2faa856bf5e643850800000000000000
-      internalID: 6355826331486825202
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Background_Test_2
-      rect:
-        serializedVersion: 2
-        x: 300
-        y: 150
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6a9a127bb4ea5bad0800000000000000
-      internalID: -2687049962438415962
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Background_Test_3
-      rect:
-        serializedVersion: 2
-        x: 450
-        y: 150
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a84a921f9c9567f70800000000000000
-      internalID: 9184627213938041994
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Background_Test_4
-      rect:
-        serializedVersion: 2
-        x: 600
-        y: 150
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1c779d5dec6a02ef0800000000000000
-      internalID: -134924581539842111
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Background_Test_5
-      rect:
-        serializedVersion: 2
-        x: 750
-        y: 150
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5318cfc851cda09f0800000000000000
-      internalID: -501346423380606667
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Background_Test_6
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 150
-        height: 150
+        width: 102
+        height: 102
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -332,10 +206,10 @@ TextureImporter:
       name: Background_Test_7
       rect:
         serializedVersion: 2
-        x: 150
+        x: 102
         y: 0
-        width: 150
-        height: 150
+        width: 102
+        height: 102
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -353,10 +227,10 @@ TextureImporter:
       name: Background_Test_8
       rect:
         serializedVersion: 2
-        x: 300
+        x: 204
         y: 0
-        width: 150
-        height: 150
+        width: 102
+        height: 102
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -374,10 +248,10 @@ TextureImporter:
       name: Background_Test_9
       rect:
         serializedVersion: 2
-        x: 450
+        x: 306
         y: 0
-        width: 150
-        height: 150
+        width: 102
+        height: 102
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -392,13 +266,139 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
+      name: Background_Test_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 102
+        width: 102
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af7c7cae1d3977ff0800000000000000
+      internalID: -38399542012950534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Test_1
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 102
+        width: 102
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2faa856bf5e643850800000000000000
+      internalID: 6355826331486825202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Test_2
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 102
+        width: 102
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a9a127bb4ea5bad0800000000000000
+      internalID: -2687049962438415962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Test_3
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 102
+        width: 102
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a84a921f9c9567f70800000000000000
+      internalID: 9184627213938041994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Test_4
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 102
+        width: 102
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c779d5dec6a02ef0800000000000000
+      internalID: -134924581539842111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background_Test_5
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 102
+        width: 102
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5318cfc851cda09f0800000000000000
+      internalID: -501346423380606667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
       name: Background_Test_10
       rect:
         serializedVersion: 2
-        x: 600
+        x: 408
         y: 0
-        width: 150
-        height: 150
+        width: 102
+        height: 102
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -416,10 +416,10 @@ TextureImporter:
       name: Background_Test_11
       rect:
         serializedVersion: 2
-        x: 750
+        x: 510
         y: 0
-        width: 150
-        height: 150
+        width: 102
+        height: 102
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
