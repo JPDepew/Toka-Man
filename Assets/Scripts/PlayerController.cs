@@ -90,6 +90,11 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator MoveTimeout(Direction direction)
     {
+        if (transform.rotation == GetQuaternionDirection(direction))
+        {
+            yield break;
+        }
+
         float targetTime = Time.time + turnTimeout;
         bool leftRayClear = false;
         bool rightRayClear = false;
