@@ -56,45 +56,49 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
+            Direction dir = Direction.UP;
+            if (IsMovingInDirection(dir)) return;
             StopAllCoroutines();
-            StartCoroutine(MoveTimeout(Direction.UP));
+            StartCoroutine(MoveTimeout(dir));
         }
     }
 
     private void HandleInputDown()
     {
+        Direction dir = Direction.DOWN;
+        if (IsMovingInDirection(dir)) return;
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             StopAllCoroutines();
-            StartCoroutine(MoveTimeout(Direction.DOWN));
+            StartCoroutine(MoveTimeout(dir));
         }
     }
 
     private void HandleInputRight()
     {
+        Direction dir = Direction.RIGHT;
+        if (IsMovingInDirection(dir)) return;
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             StopAllCoroutines();
-            StartCoroutine(MoveTimeout(Direction.RIGHT));
+            StartCoroutine(MoveTimeout(dir));
         }
     }
 
     private void HandleInputLeft()
     {
+        Direction dir = Direction.LEFT;
+        if (IsMovingInDirection(dir)) return;
+
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             StopAllCoroutines();
-            StartCoroutine(MoveTimeout(Direction.LEFT));
+            StartCoroutine(MoveTimeout(dir));
         }
     }
 
     private IEnumerator MoveTimeout(Direction direction)
     {
-        if (transform.rotation == GetQuaternionDirection(direction))
-        {
-            yield break;
-        }
-
         float targetTime = Time.time + turnTimeout;
         bool leftRayClear = false;
         bool rightRayClear = false;
@@ -183,5 +187,10 @@ public class PlayerController : MonoBehaviour
             default:
                 return Quaternion.Euler(new Vector3());
         }
+    }
+
+    private bool IsMovingInDirection(Direction direction)
+    {
+        return transform.rotation == GetQuaternionDirection(direction);
     }
 }
