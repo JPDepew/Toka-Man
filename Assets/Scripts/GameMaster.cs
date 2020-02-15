@@ -31,10 +31,6 @@ public class GameMaster : MonoBehaviour
         int tilemapSize = tilemap.size.x * tilemap.size.y;
         Vector3Int originalPos = new Vector3Int(tilemap.origin.x, tilemap.origin.y, 0);
         Vector3Int pos = originalPos;
-        //Debug.Log(pos);
-        //Debug.Log(tilemap.cellSize);
-        //Debug.Log(tilemap.size);
-        TileBase[] allTiles = tilemap.GetTilesBlock(tilemap.cellBounds);
 
         for (int i = 0; i < tilemap.size.x; i++)
         {
@@ -42,17 +38,37 @@ public class GameMaster : MonoBehaviour
             {
                 if (tilemap.GetTile(pos) == null)
                 {
-                    Instantiate(dataPoint, new Vector3(pos.x + 1, pos.y + 1), Quaternion.Euler(Vector3.up), dataPointsParent);
-                    //Debug.Log(tilemap.Get(pos).name + " Not null " + pos);
+                    InstantiateDataPointSection(pos);
                 }
-                //else
-                //{
-                //    //Debug.Log(tilemap.GetSprite(pos) + " " + pos);
-                //}
 
                 pos = new Vector3Int(pos.x, (int)(pos.y + 1), 0);
             }
             pos = new Vector3Int((int)(pos.x + 1), originalPos.y, 0);
+        }
+    }
+
+    void InstantiateDataPointSection(Vector3Int pos)
+    {
+        Instantiate(dataPoint, new Vector3(pos.x + 1, pos.y + 1), Quaternion.Euler(Vector3.up), dataPointsParent);
+        InstantiateRightDataPoints(pos);
+        InstantiateUpDataPoints(pos);
+    }
+
+    void InstantiateRightDataPoints(Vector3Int pos)
+    {
+        Vector3Int rightPos = new Vector3Int(pos.x + 1, pos.y, pos.z);
+        if (tilemap.GetTile(rightPos) == null)
+        {
+            // Create more data points to the right
+        }
+    }
+
+    void InstantiateUpDataPoints(Vector3Int pos)
+    {
+        Vector3Int upPos = new Vector3Int(pos.x, pos.y + 1, pos.z);
+        if (tilemap.GetTile(upPos) == null)
+        {
+            // Create more data points in the upwards direction
         }
     }
 }

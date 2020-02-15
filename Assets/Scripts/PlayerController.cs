@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 10;
     public float turnTimeout = 0.5f;
     public float boundsOffset = 0.02f;
+    public LayerMask collisionLayerMask;
 
     private Vector2 direction;
     private BoxCollider2D boxCollider;
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * playerHalfWidth, transform.up, speed * Time.deltaTime);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * playerHalfWidth, transform.up, speed * Time.deltaTime, collisionLayerMask);
         Debug.DrawRay(transform.position + transform.up * playerHalfWidth, transform.up * speed * Time.deltaTime, Color.red);
 
         if (hit)
