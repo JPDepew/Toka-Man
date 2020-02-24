@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     private const float hitDstOffset = 0.001f;
     private enum Direction { UP, DOWN, LEFT, RIGHT }
 
+    public delegate void OnDataPickup();
+    public static event OnDataPickup onDataPickup;
+
     void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
@@ -193,5 +196,14 @@ public class PlayerController : MonoBehaviour
     private bool IsMovingInDirection(Direction direction)
     {
         return transform.rotation == GetQuaternionDirection(direction);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Data Point"))
+        {
+            onDataPickup?.Invoke();
+            Destroy(collision.gameObject);
+        }
     }
 }

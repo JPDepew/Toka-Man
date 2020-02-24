@@ -9,9 +9,14 @@ public class GameMaster : MonoBehaviour
     public Transform dataPointsParent;
     public Tilemap tilemap;
 
+    private int dataPointCount = 0;
+    private int playerDataPointCount = 0;
+
     // Start is called before the first frame update
     void Start()
     {
+        PlayerController.onDataPickup += IncrementPlayerPickupCount;
+
         StartGame();
     }
 
@@ -39,6 +44,7 @@ public class GameMaster : MonoBehaviour
                 if (tilemap.GetTile(pos) == null)
                 {
                     InstantiateDataPointSection(pos);
+                    dataPointCount++;
                 }
 
                 pos = new Vector3Int(pos.x, (int)(pos.y + 1), 0);
@@ -60,6 +66,7 @@ public class GameMaster : MonoBehaviour
         if (tilemap.GetTile(rightPos) == null)
         {
             // Create more data points to the right
+            dataPointCount++;
         }
     }
 
@@ -69,6 +76,14 @@ public class GameMaster : MonoBehaviour
         if (tilemap.GetTile(upPos) == null)
         {
             // Create more data points in the upwards direction
+            dataPointCount++;
         }
+    }
+
+    void IncrementPlayerPickupCount()
+    {
+        playerDataPointCount++;
+        Debug.Log("Another data point");
+        // check if >=
     }
 }
