@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float turnTimeout = 0.5f;
     public float boundsOffset = 0.02f;
     public LayerMask collisionLayerMask;
+    public GameObject dataPointCollect;
 
     private Vector2 direction;
     private BoxCollider2D boxCollider;
@@ -42,8 +43,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * playerHalfWidth, transform.up, speed * Time.deltaTime, collisionLayerMask);
-        Debug.DrawRay(transform.position + transform.up * playerHalfWidth, transform.up * speed * Time.deltaTime, Color.red);
+        RaycastHit2D hit = ForwardsRaycast();
 
         if (hit)
         {
@@ -54,6 +54,12 @@ public class PlayerController : MonoBehaviour
         {
             transform.Translate(Vector2.up * speed * Time.deltaTime);
         }
+    }
+
+    private RaycastHit2D ForwardsRaycast()
+    {
+        Debug.DrawRay(transform.position + transform.up * playerHalfWidth, transform.up * speed * Time.deltaTime, Color.red);
+        return Physics2D.Raycast(transform.position + transform.up * playerHalfWidth, transform.up, speed * Time.deltaTime, collisionLayerMask);
     }
 
     private void HandleInputUp()
@@ -109,7 +115,7 @@ public class PlayerController : MonoBehaviour
         bool shouldTurn = false;
         while (Time.time < targetTime)
         {
-            (RaycastHit2D hit1, RaycastHit2D hit2) = RaycastsBasedOnDirection(direction);
+            (RaycastHit2D hit1, RaycastHit2D hit2, RaycastHit2D hitMid) = RaycastsBasedOnDirection(direction);
 
             if (hit1.distance > 0.01f)
             {
@@ -121,7 +127,10 @@ public class PlayerController : MonoBehaviour
             }
             if (leftRayClear && rightRayClear)
             {
-                shouldTurn = true;
+                if (hitMid.distance > 0.01f)
+                {
+                    shouldTurn = true;
+                }
             }
 
             if (hit1.distance > hitDstOffset && hit2.distance > hitDstOffset || shouldTurn)
@@ -134,46 +143,54 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private (RaycastHit2D, RaycastHit2D) RaycastsBasedOnDirection(Direction direction)
+    private (RaycastHit2D, RaycastHit2D, RaycastHit2D) RaycastsBasedOnDirection(Direction direction)
     {
         Vector2 vector1;
         Vector2 vector2;
+        Vector2 vectorMid;
         Vector2 directionVector;
         switch (direction)
         {
             case Direction.UP:
                 vector1 = new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.max.y);
                 vector2 = new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.max.y);
+                vectorMid = new Vector2(boxCollider.bounds.center.x - boundsOffset, boxCollider.bounds.max.y);
                 directionVector = Vector2.up;
                 break;
             case Direction.DOWN:
                 vector1 = new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.min.y);
                 vector2 = new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.min.y);
+                vectorMid = new Vector2(boxCollider.bounds.center.x - boundsOffset, boxCollider.bounds.min.y);
                 directionVector = Vector2.down;
                 break;
             case Direction.LEFT:
                 vector1 = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.min.y + boundsOffset);
                 vector2 = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.max.y - boundsOffset);
+                vectorMid = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.center.y - boundsOffset);
                 directionVector = Vector2.left;
                 break;
             case Direction.RIGHT:
                 vector1 = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.min.y + boundsOffset);
                 vector2 = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.max.y - boundsOffset);
+                vectorMid = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.center.y - boundsOffset);
                 directionVector = Vector2.right;
                 break;
             default:
                 vector1 = new Vector2();
                 vector2 = new Vector2();
+                vectorMid = new Vector2();
                 directionVector = new Vector2();
                 break;
         }
 
         RaycastHit2D hit1 = Physics2D.Raycast(vector1, directionVector);
         RaycastHit2D hit2 = Physics2D.Raycast(vector2, directionVector);
+        RaycastHit2D hitMid = Physics2D.Raycast(vectorMid, directionVector);
         Debug.DrawRay(vector1, directionVector, Color.red);
         Debug.DrawRay(vector2, directionVector, Color.red);
+        Debug.DrawRay(vectorMid, directionVector, Color.red);
 
-        return (hit1, hit2);
+        return (hit1, hit2, hitMid);
     }
 
     private Quaternion GetQuaternionDirection(Direction direction)
@@ -202,6 +219,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Data Point"))
         {
+            Instantiate(dataPointCollect, collision.transform.position, transform.rotation);
             onDataPickup?.Invoke();
             Destroy(collision.gameObject);
         }
