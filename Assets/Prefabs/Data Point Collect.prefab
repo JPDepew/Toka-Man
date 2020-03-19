@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7667616840099299674}
   - component: {fileID: 9017519133579892344}
   - component: {fileID: 2617154809928557423}
+  - component: {fileID: 6265561935590975738}
   m_Layer: 0
   m_Name: Data Point Collect
   m_TagString: Untagged
@@ -4812,3 +4813,16 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &6265561935590975738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6485627615670866124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b54f93588435d408e322cc7f24d99e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waitBeforeSelfDestruct: 2

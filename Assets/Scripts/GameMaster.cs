@@ -83,7 +83,6 @@ public class GameMaster : MonoBehaviour
     void IncrementPlayerPickupCount()
     {
         playerDataPointCount++;
-        Debug.Log("Another data point");
         // check if >=
     }
 }

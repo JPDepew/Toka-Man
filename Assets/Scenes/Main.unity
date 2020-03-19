@@ -1232,7 +1232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
-  turnTimeout: 1
+  turnTimeout: 0.3
   boundsOffset: 0.03
   collisionLayerMask:
     serializedVersion: 2
