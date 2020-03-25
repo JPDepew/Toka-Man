@@ -11,6 +11,7 @@ public class GameMaster : MonoBehaviour
 
     private int dataPointCount = 0;
     private int playerDataPointCount = 0;
+    private Transform player;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class GameMaster : MonoBehaviour
 
     void StartGame()
     {
+        player = FindObjectOfType<PlayerController>().transform;
         InstantiateDataPoints();
     }
 
@@ -41,23 +43,23 @@ public class GameMaster : MonoBehaviour
         {
             for (int j = 0; j < tilemap.size.y; j++)
             {
-                if (tilemap.GetTile(pos) == null)
+                if (tilemap.GetTile(pos) == null && !AlmostEqual(new Vector2(pos.x + 1, pos.y + 1), player.position, 0.01f))
                 {
                     InstantiateDataPointSection(pos);
                     dataPointCount++;
                 }
 
-                pos = new Vector3Int(pos.x, (int)(pos.y + 1), 0);
+                pos = new Vector3Int(pos.x, (pos.y + 1), 0);
             }
-            pos = new Vector3Int((int)(pos.x + 1), originalPos.y, 0);
+            pos = new Vector3Int((pos.x + 1), originalPos.y, 0);
         }
     }
 
     void InstantiateDataPointSection(Vector3Int pos)
     {
         Instantiate(dataPoint, new Vector3(pos.x + 1, pos.y + 1), Quaternion.Euler(Vector3.up), dataPointsParent);
-        InstantiateRightDataPoints(pos);
-        InstantiateUpDataPoints(pos);
+        //InstantiateRightDataPoints(pos);
+        //InstantiateUpDataPoints(pos);
     }
 
     void InstantiateRightDataPoints(Vector3Int pos)
@@ -84,5 +86,10 @@ public class GameMaster : MonoBehaviour
     {
         playerDataPointCount++;
         // check if >=
+    }
+
+    private bool AlmostEqual(Vector3 pos1, Vector3 pos2, float leeway)
+    {
+        return pos1.x > pos2.x - leeway && pos1.x < pos2.x + leeway && pos1.y > pos2.y - leeway && pos1.y < pos2.y + leeway;
     }
 }
