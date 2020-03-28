@@ -1,13 +1,18 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : MonoBehaviour
+public class Node
 {
     public bool walkable;
+    public Vector3 position;
+    public int gridX;
+    public int gridY;
 
     public int gCost;
     public int hCost;
+    public Node parent;
+    public bool cur;
+    public bool target;
 
     public int fCost
     {
@@ -16,9 +21,11 @@ public class Node : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    public Node(bool _walkable, Vector3 _position, int _gridX, int _gridY)
     {
-        Gizmos.color = walkable ? new Color(1, 1, 1, 0.5f) : new Color(1, 0, 0, 0.5f);
-        Gizmos.DrawCube(transform.position, Vector3.one);
+        walkable = _walkable;
+        position = _position;
+        gridX = _gridX;
+        gridY = _gridY;
     }
 }

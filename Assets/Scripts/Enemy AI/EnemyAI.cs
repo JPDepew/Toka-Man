@@ -9,6 +9,8 @@ public class EnemyAI : MonoBehaviour
     private Tilemap tilemap;
     private float tilemapSize;
     private GameObject player;
+    GridContainer grid;
+    GameMaster gameMaster;
 
     // Start is called before the first frame update
     void Start()
@@ -16,27 +18,92 @@ public class EnemyAI : MonoBehaviour
         tilemap = FindObjectOfType<Tilemap>();
         tilemapSize = tilemap.size.x * tilemap.size.y;
         player = FindObjectOfType<PlayerController>().gameObject;
+        gameMaster = GameMaster.instance;
+        grid = GridContainer.instance;
 
         StartCoroutine(Move());
+        FindPath(grid.GetNodeFromWorldPoint(), grid.GetNodeFromWorldPoint2());
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(player.transform.position);
+        FindPath(grid.GetNodeFromWorldPoint(), grid.GetNodeFromWorldPoint2());
     }
 
-    void FindPath(Vector3 startPos, Vector3 endPos)
+    void FindPath(Node startPos, Node targetPos)
     {
-        List<Vector3> openSet = new List<Vector3>();
-        HashSet<Vector3> closedSet = new HashSet<Vector3>();
-
+        List<Node> openSet = new List<Node>();
+        HashSet<Node> closedSet = new HashSet<Node>();
+        startPos.cur = true;
         openSet.Add(startPos);
 
-        while(openSet.Count > 0)
+        targetPos.target = true;
+        while (openSet.Count > 0)
         {
+            Node currentNode = openSet[0];
 
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].fCost < currentNode.fCost ||
+                    openSet[i].fCost == currentNode.fCost && openSet[i].hCost < currentNode.hCost)
+                {
+                    currentNode = openSet[i];
+                }
+            }
+
+            openSet.Remove(currentNode);
+            closedSet.Add(currentNode);
+
+            if (currentNode == targetPos)
+            {
+                RetracePath(startPos, targetPos);
+                return;
+            }
+
+            foreach (Node neighbor in grid.GetNeighbors(currentNode))
+            {
+                if (!neighbor.walkable || closedSet.Contains(neighbor))
+                {
+                    continue;
+                }
+
+                int newMovementCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbor);
+                if (newMovementCostToNeighbor < neighbor.gCost || !openSet.Contains(neighbor))
+                {
+                    neighbor.gCost = newMovementCostToNeighbor;
+                    neighbor.hCost = GetDistance(neighbor, targetPos);
+                    neighbor.parent = currentNode;
+
+                    if (!openSet.Contains(neighbor))
+                    {
+                        openSet.Add(neighbor);
+                    }
+                }
+            }
         }
+    }
+
+    void RetracePath(Node startNode, Node endNode)
+    {
+        List<Node> path = new List<Node>();
+        Node curNode = endNode;
+
+        while (curNode != startNode)
+        {
+            path.Add(curNode);
+            curNode = curNode.parent;
+        }
+        path.Reverse();
+
+        grid.path = path;
+    }
+
+    int GetDistance(Node nodeA, Node nodeB)
+    {
+        int xDst = Mathf.Abs(nodeA.gridX - nodeB.gridX);
+        int yDst = Mathf.Abs(nodeA.gridY - nodeB.gridY);
+        return xDst + yDst;
     }
 
     private IEnumerator Move()

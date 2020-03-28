@@ -5,17 +5,28 @@ using UnityEngine.Tilemaps;
 
 public class GameMaster : MonoBehaviour
 {
+    public static GameMaster instance;
+
     public GameObject dataPoint;
     public Transform dataPointsParent;
     public Tilemap tilemap;
     public Transform gridContainer;
-    public GameObject node;
 
-    Node[,] grid;
+    GridContainer gridRef;
+
+    public Node[,] grid;
 
     private int dataPointCount = 0;
     private int playerDataPointCount = 0;
     private Transform player;
+
+    private void Awake()
+    {
+        instance = this;
+        player = FindObjectOfType<PlayerController>().transform;
+        gridRef = GetComponent<GridContainer>();
+        InstantiateDataPoints();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -33,8 +44,7 @@ public class GameMaster : MonoBehaviour
 
     void StartGame()
     {
-        player = FindObjectOfType<PlayerController>().transform;
-        InstantiateDataPoints();
+        
     }
 
     void InstantiateDataPoints()
@@ -42,36 +52,33 @@ public class GameMaster : MonoBehaviour
         int tilemapSize = tilemap.size.x * tilemap.size.y;
         Vector3Int originalPos = new Vector3Int(tilemap.origin.x, tilemap.origin.y, 0);
         Vector3Int pos = originalPos;
+        Vector3Int offset = new Vector3Int((int)tilemap.transform.position.x, (int)tilemap.transform.position.y, 0);
 
-        grid = new Node[tilemap.size.y, tilemap.size.x];
+        grid = new Node[tilemap.size.x, tilemap.size.y];
 
-        for (int i = 0; i < tilemap.size.x; i++)
+        for (int x = 0; x < tilemap.size.x; x++)
         {
-            for (int j = 0; j < tilemap.size.y; j++)
+            for (int y = 0; y < tilemap.size.y; y++)
             {
                 if (tilemap.GetTile(pos) == null)
                 {
                     if (!AlmostEqual(new Vector2(pos.x + 1, pos.y + 1), player.position, 0.01f))
                     {
-                        InstantiateDataPointSection(pos);
+                        InstantiateDataPointSection(pos + offset);
                         dataPointCount++;
                     }
-                    GameObject tempNode = Instantiate(node, new Vector3(pos.x + 1, pos.y + 1), transform.rotation, gridContainer);
-                    grid[j, i] = tempNode.GetComponent<Node>();
-                    grid[j, i].walkable = true;
+                    grid[x, y] = new Node(true, new Vector3(pos.x + 1, pos.y + 1) + offset, x, y);
                 }
                 else
                 {
-                    Debug.Log(new Vector2(pos.x + 1, pos.y + 1));
-                    GameObject tempNode = Instantiate(node, new Vector3(pos.x + 1, pos.y + 1), transform.rotation, gridContainer);
-                    grid[j, i] = tempNode.GetComponent<Node>();
-                    grid[j, i].walkable = false;
+                    grid[x, y] = new Node(false, new Vector3(pos.x + 1, pos.y + 1) + offset, x, y);
                 }
 
                 pos = new Vector3Int(pos.x, (pos.y + 1), 0);
             }
             pos = new Vector3Int((pos.x + 1), originalPos.y, 0);
         }
+        gridRef.grid = grid;
     }
 
     void InstantiateDataPointSection(Vector3Int pos)
