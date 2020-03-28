@@ -8,6 +8,10 @@ public class GameMaster : MonoBehaviour
     public GameObject dataPoint;
     public Transform dataPointsParent;
     public Tilemap tilemap;
+    public Transform gridContainer;
+    public GameObject node;
+
+    Node[,] grid;
 
     private int dataPointCount = 0;
     private int playerDataPointCount = 0;
@@ -39,14 +43,29 @@ public class GameMaster : MonoBehaviour
         Vector3Int originalPos = new Vector3Int(tilemap.origin.x, tilemap.origin.y, 0);
         Vector3Int pos = originalPos;
 
+        grid = new Node[tilemap.size.y, tilemap.size.x];
+
         for (int i = 0; i < tilemap.size.x; i++)
         {
             for (int j = 0; j < tilemap.size.y; j++)
             {
-                if (tilemap.GetTile(pos) == null && !AlmostEqual(new Vector2(pos.x + 1, pos.y + 1), player.position, 0.01f))
+                if (tilemap.GetTile(pos) == null)
                 {
-                    InstantiateDataPointSection(pos);
-                    dataPointCount++;
+                    if (!AlmostEqual(new Vector2(pos.x + 1, pos.y + 1), player.position, 0.01f))
+                    {
+                        InstantiateDataPointSection(pos);
+                        dataPointCount++;
+                    }
+                    GameObject tempNode = Instantiate(node, new Vector3(pos.x + 1, pos.y + 1), transform.rotation, gridContainer);
+                    grid[j, i] = tempNode.GetComponent<Node>();
+                    grid[j, i].walkable = true;
+                }
+                else
+                {
+                    Debug.Log(new Vector2(pos.x + 1, pos.y + 1));
+                    GameObject tempNode = Instantiate(node, new Vector3(pos.x + 1, pos.y + 1), transform.rotation, gridContainer);
+                    grid[j, i] = tempNode.GetComponent<Node>();
+                    grid[j, i].walkable = false;
                 }
 
                 pos = new Vector3Int(pos.x, (pos.y + 1), 0);
