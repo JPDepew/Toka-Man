@@ -12,7 +12,6 @@ public class EnemyAI : MonoBehaviour
     GridContainer grid;
     GameMaster gameMaster;
 
-    // Start is called before the first frame update
     void Start()
     {
         tilemap = FindObjectOfType<Tilemap>();
@@ -22,23 +21,19 @@ public class EnemyAI : MonoBehaviour
         grid = GridContainer.instance;
 
         StartCoroutine(Move());
-        FindPath(grid.GetNodeFromWorldPoint(), grid.GetNodeFromWorldPoint2());
     }
 
-    // Update is called once per frame
     void Update()
     {
-        FindPath(grid.GetNodeFromWorldPoint(), grid.GetNodeFromWorldPoint2());
+        //FindPath(grid.GetNodeFromWorldPoint(player.transform.position), grid.GetNodeFromWorldPoint(transform.position));
     }
 
     void FindPath(Node startPos, Node targetPos)
     {
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();
-        startPos.cur = true;
         openSet.Add(startPos);
 
-        targetPos.target = true;
         while (openSet.Count > 0)
         {
             Node currentNode = openSet[0];
@@ -94,7 +89,7 @@ public class EnemyAI : MonoBehaviour
             path.Add(curNode);
             curNode = curNode.parent;
         }
-        path.Reverse();
+        //path.Reverse();
 
         grid.path = path;
     }
@@ -110,25 +105,25 @@ public class EnemyAI : MonoBehaviour
     {
         while (true)
         {
-            yield return MoveToPos(GetNextPath());
+            FindPath(grid.GetNodeFromWorldPoint(player.transform.position), grid.GetNodeFromWorldPoint(transform.position));
+            grid.path.RemoveAt(0);
+            Node nextPos = grid.path[0];
+            grid.path.RemoveAt(0);
+            Debug.Log(nextPos.position);
+            yield return MoveToPos(nextPos.position);
         }
     }
 
-    private IEnumerator MoveToPos(Vector3? newPos)
+    private IEnumerator MoveToPos(Vector3 newPos)
     {
-        Vector3 convertedNewPos = Vector3.zero;
-        if (newPos != null)
-        {
-            convertedNewPos = (Vector3)newPos;
-        }
-        Vector3 direction = (convertedNewPos - transform.position).normalized;
+        Vector3 direction = (newPos - transform.position).normalized;
 
-        while (!ReachedDestination(transform.position, convertedNewPos, direction))
+        while (!ReachedDestination(transform.position, newPos, direction))
         {
             transform.position = transform.position + direction * speed * Time.deltaTime;
             yield return null;
         }
-        transform.position = convertedNewPos;
+        transform.position = newPos;
     }
 
     private Vector3Int? GetNextPath()
@@ -137,7 +132,7 @@ public class EnemyAI : MonoBehaviour
         float playerYDiff = player.transform.position.y - transform.position.y;
         float dirX = Mathf.Sign(playerXDiff);
         float dirY = Mathf.Sign(playerYDiff);
-        int gridOffset = -1;
+        int gridOffset = 0;
 
         if (Mathf.Abs(playerXDiff) > Mathf.Abs(playerYDiff))
         {

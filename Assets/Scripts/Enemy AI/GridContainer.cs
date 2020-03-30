@@ -12,13 +12,16 @@ public class GridContainer : MonoBehaviour
         instance = this;
     }
 
-    public Node GetNodeFromWorldPoint()
+    public Node GetNodeFromWorldPoint(Vector3 position)
     {
-        return grid[10, 8];
-    }
-    public Node GetNodeFromWorldPoint2()
-    {
-        return grid[1, 1];
+        //float percentX = position.x / grid.GetLength(0);
+        //float percentY = position.y / grid.GetLength(1);
+        //percentX = Mathf.Clamp01(percentX);
+        //percentY = Mathf.Clamp01(percentY);
+
+        //int x = Mathf.RoundToInt(())
+
+        return grid[(int)position.x, (int)position.y];
     }
 
     public List<Node> GetNeighbors(Node node)
