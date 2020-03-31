@@ -75,10 +75,10 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInputDown()
     {
-        Direction dir = Direction.DOWN;
-        if (IsMovingInDirection(dir)) return;
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
+            Direction dir = Direction.DOWN;
+            if (IsMovingInDirection(dir)) return;
             StopAllCoroutines();
             StartCoroutine(MoveTimeout(dir));
         }
@@ -212,7 +212,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsMovingInDirection(Direction direction)
     {
-        return transform.rotation == GetQuaternionDirection(direction);
+        return transform.rotation.eulerAngles == GetQuaternionDirection(direction).eulerAngles;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

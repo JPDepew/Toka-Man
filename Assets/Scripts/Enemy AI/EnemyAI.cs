@@ -23,11 +23,6 @@ public class EnemyAI : MonoBehaviour
         StartCoroutine(Move());
     }
 
-    void Update()
-    {
-        //FindPath(grid.GetNodeFromWorldPoint(player.transform.position), grid.GetNodeFromWorldPoint(transform.position));
-    }
-
     void FindPath(Node startPos, Node targetPos)
     {
         List<Node> openSet = new List<Node>();
@@ -106,11 +101,18 @@ public class EnemyAI : MonoBehaviour
         while (true)
         {
             FindPath(grid.GetNodeFromWorldPoint(player.transform.position), grid.GetNodeFromWorldPoint(transform.position));
-            grid.path.RemoveAt(0);
-            Node nextPos = grid.path[0];
-            grid.path.RemoveAt(0);
-            Debug.Log(nextPos.position);
-            yield return MoveToPos(nextPos.position);
+            if (grid.path.Count > 0)
+                grid.path.RemoveAt(0);
+            if (grid.path.Count > 0)
+            {
+                Node nextPos = grid.path[0];
+                grid.path.RemoveAt(0);
+                yield return MoveToPos(nextPos.position);
+            }
+            else
+            {
+                yield return null;
+            }
         }
     }
 
@@ -124,60 +126,6 @@ public class EnemyAI : MonoBehaviour
             yield return null;
         }
         transform.position = newPos;
-    }
-
-    private Vector3Int? GetNextPath()
-    {
-        float playerXDiff = player.transform.position.x - transform.position.x;
-        float playerYDiff = player.transform.position.y - transform.position.y;
-        float dirX = Mathf.Sign(playerXDiff);
-        float dirY = Mathf.Sign(playerYDiff);
-        int gridOffset = 0;
-
-        if (Mathf.Abs(playerXDiff) > Mathf.Abs(playerYDiff))
-        {
-            if (tilemap.GetTile(new Vector3Int((int)(transform.position.x + dirX) + gridOffset, (int)transform.position.y + gridOffset, 0)) == null)
-            {
-                return new Vector3Int((int)(transform.position.x + dirX), (int)transform.position.y, 0);
-            }
-            else if (tilemap.GetTile(new Vector3Int((int)transform.position.x + gridOffset, (int)(transform.position.y + dirY) + gridOffset, 0)) == null)
-            {
-                return new Vector3Int((int)transform.position.x, (int)(transform.position.y + dirY), 0);
-            }
-            else
-            {
-                if (tilemap.GetTile(new Vector3Int((int)(transform.position.x - dirX) + gridOffset, (int)transform.position.y + gridOffset, 0)) == null)
-                {
-                    return new Vector3Int((int)(transform.position.x - dirX), (int)transform.position.y, 0);
-                }
-                else
-                {
-                    return new Vector3Int((int)transform.position.x, (int)(transform.position.y - dirY), 0);
-                }
-            }
-        }
-        else
-        {
-            if (tilemap.GetTile(new Vector3Int((int)transform.position.x + gridOffset, (int)(transform.position.y + dirY) + gridOffset, 0)) == null)
-            {
-                return new Vector3Int((int)transform.position.x, (int)(transform.position.y + dirY), 0);
-            }
-            else if (tilemap.GetTile(new Vector3Int((int)(transform.position.x + dirX) + gridOffset, (int)transform.position.y + gridOffset, 0)) == null)
-            {
-                return new Vector3Int((int)(transform.position.x + dirX), (int)transform.position.y, 0);
-            }
-            else
-            {
-                if (tilemap.GetTile(new Vector3Int((int)transform.position.x + gridOffset, (int)(transform.position.y - dirY) + gridOffset, 0)) == null)
-                {
-                    return new Vector3Int((int)transform.position.x, (int)(transform.position.y - dirY), 0);
-                }
-                else
-                {
-                    return new Vector3Int((int)(transform.position.x + dirX), (int)transform.position.y, 0);
-                }
-            }
-        }
     }
 
     private bool ReachedDestination(Vector3 start, Vector3 destination, Vector3 direction)
