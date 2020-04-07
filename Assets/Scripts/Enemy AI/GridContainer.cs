@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class GridContainer : MonoBehaviour
 {
+    public bool onlyDisplayPathGizmos;
     public Node[,] grid;
     public static GridContainer instance;
+    public int MaxSize
+    {
+        get
+        {
+            return grid.GetLength(0) * grid.GetLength(1);
+        }
+    }
 
     private void Awake()
     {
@@ -14,13 +22,6 @@ public class GridContainer : MonoBehaviour
 
     public Node GetNodeFromWorldPoint(Vector3 position)
     {
-        //float percentX = position.x / grid.GetLength(0);
-        //float percentY = position.y / grid.GetLength(1);
-        //percentX = Mathf.Clamp01(percentX);
-        //percentY = Mathf.Clamp01(percentY);
-
-        //int x = Mathf.RoundToInt(())
-
         return grid[(int)position.x, (int)position.y];
     }
 
@@ -50,34 +51,54 @@ public class GridContainer : MonoBehaviour
     }
 
     public List<Node> path;
-    private void OnDrawGizmos()
-    {
-        if (grid != null)
-        {
-            for (int i = 0; i < grid.GetLength(0); i++)
-            {
-                for (int j = 0; j < grid.GetLength(1); j++)
-                {
-                    Gizmos.color = grid[i, j].walkable ? new Color(1, 1, 1, 0.5f) : new Color(1, 0, 0, 0.5f);
-                    if (path != null)
-                    {
-                        if (path.Contains(grid[i, j]))
-                        {
-                            Gizmos.color = Color.black;
-                        }
-                    }
+    //private void OnDrawGizmos()
+    //{
+    //    if (grid == null)
+    //        return;
 
-                    if(grid[i, j].cur)
-                    {
-                        Gizmos.color = Color.green;
-                    }
-                    if (grid[i, j].target)
-                    {
-                        Gizmos.color = Color.blue;
-                    }
-                    Gizmos.DrawCube(grid[i, j].position, Vector3.one);
-                }
-            }
-        }
-    }
+    //    if (onlyDisplayPathGizmos)
+    //    {
+    //        if (path != null)
+    //        {
+    //            for (int i = 0; i < grid.GetLength(0); i++)
+    //            {
+    //                for (int j = 0; j < grid.GetLength(1); j++)
+    //                {
+    //                    if (path.Contains(grid[i, j]))
+    //                    {
+    //                        Gizmos.color = Color.black;
+    //                        Gizmos.DrawCube(grid[i, j].position, Vector3.one);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        for (int i = 0; i < grid.GetLength(0); i++)
+    //        {
+    //            for (int j = 0; j < grid.GetLength(1); j++)
+    //            {
+    //                Gizmos.color = grid[i, j].walkable ? new Color(1, 1, 1, 0.5f) : new Color(1, 0, 0, 0.5f);
+    //                if (path != null)
+    //                {
+    //                    if (path.Contains(grid[i, j]))
+    //                    {
+    //                        Gizmos.color = Color.black;
+    //                    }
+    //                }
+
+    //                if (grid[i, j].cur)
+    //                {
+    //                    Gizmos.color = Color.green;
+    //                }
+    //                if (grid[i, j].target)
+    //                {
+    //                    Gizmos.color = Color.blue;
+    //                }
+    //                Gizmos.DrawCube(grid[i, j].position, Vector3.one);
+    //            }
+    //        }
+    //    }
+    //}
 }

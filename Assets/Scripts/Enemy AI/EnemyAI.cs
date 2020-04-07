@@ -23,28 +23,23 @@ public class EnemyAI : MonoBehaviour
         StartCoroutine(Move());
     }
 
+    /// <summary>
+    /// A* algorithm
+    /// </summary>
+    /// <param name="startPos">Node at which to start the pathat</param>
+    /// <param name="targetPos">Target node</param>
     void FindPath(Node startPos, Node targetPos)
     {
-        List<Node> openSet = new List<Node>();
+        Heap<Node> openSet = new Heap<Node>(grid.MaxSize);
         HashSet<Node> closedSet = new HashSet<Node>();
         openSet.Add(startPos);
 
         while (openSet.Count > 0)
         {
-            Node currentNode = openSet[0];
-
-            for (int i = 1; i < openSet.Count; i++)
-            {
-                if (openSet[i].fCost < currentNode.fCost ||
-                    openSet[i].fCost == currentNode.fCost && openSet[i].hCost < currentNode.hCost)
-                {
-                    currentNode = openSet[i];
-                }
-            }
-
-            openSet.Remove(currentNode);
+            Node currentNode = openSet.RemoveFirst();
             closedSet.Add(currentNode);
 
+            // Path found
             if (currentNode == targetPos)
             {
                 RetracePath(startPos, targetPos);
@@ -74,6 +69,11 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get the path in a linked list
+    /// </summary>
+    /// <param name="startNode"></param>
+    /// <param name="endNode"></param>
     void RetracePath(Node startNode, Node endNode)
     {
         List<Node> path = new List<Node>();
@@ -89,6 +89,12 @@ public class EnemyAI : MonoBehaviour
         grid.path = path;
     }
 
+    /// <summary>
+    /// Gets the distance between two nodes. This is simply the Xdst + Ydst, since everything is on a grid.
+    /// </summary>
+    /// <param name="nodeA"></param>
+    /// <param name="nodeB"></param>
+    /// <returns></returns>
     int GetDistance(Node nodeA, Node nodeB)
     {
         int xDst = Mathf.Abs(nodeA.gridX - nodeB.gridX);
@@ -96,6 +102,10 @@ public class EnemyAI : MonoBehaviour
         return xDst + yDst;
     }
 
+    /// <summary>
+    /// Gets the next node to move from from the path.
+    /// </summary>
+    /// <returns>null</returns>
     private IEnumerator Move()
     {
         while (true)
@@ -116,6 +126,11 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Moves to the new position.
+    /// </summary>
+    /// <param name="newPos"></param>
+    /// <returns>null (once a frame)</returns>
     private IEnumerator MoveToPos(Vector3 newPos)
     {
         Vector3 direction = (newPos - transform.position).normalized;
@@ -128,6 +143,13 @@ public class EnemyAI : MonoBehaviour
         transform.position = newPos;
     }
 
+    /// <summary>
+    /// Checks if this has reached the destination by seeing if the start position is overlapping with the end position.
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="destination"></param>
+    /// <param name="direction"></param>
+    /// <returns>Whether or not the destination has been reached</returns>
     private bool ReachedDestination(Vector3 start, Vector3 destination, Vector3 direction)
     {
         if (direction == Vector3.right)

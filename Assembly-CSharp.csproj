@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Enemy AI\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\GridContainer.cs" />
+    <Compile Include="Assets\Scripts\Enemy AI\Heap.cs" />
     <Compile Include="Assets\Scripts\Enemy AI\Node.cs" />
     <Compile Include="Assets\Scripts\GameMaster.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />

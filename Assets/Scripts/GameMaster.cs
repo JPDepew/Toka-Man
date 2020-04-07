@@ -32,21 +32,12 @@ public class GameMaster : MonoBehaviour
     void Start()
     {
         PlayerController.onDataPickup += IncrementPlayerPickupCount;
-
-        StartGame();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void StartGame()
-    {
-        
-    }
-
+    /// <summary>
+    /// Instantiates datapoints on all walkable areas on the grid.
+    /// Initializes the grid to the size of the tilemap and adds a node for each position marked as walkable/non-walkable.
+    /// </summary>
     void InstantiateDataPoints()
     {
         int tilemapSize = tilemap.size.x * tilemap.size.y;
@@ -84,28 +75,6 @@ public class GameMaster : MonoBehaviour
     void InstantiateDataPointSection(Vector3Int pos)
     {
         Instantiate(dataPoint, new Vector3(pos.x + 1, pos.y + 1), Quaternion.Euler(Vector3.up), dataPointsParent);
-        //InstantiateRightDataPoints(pos);
-        //InstantiateUpDataPoints(pos);
-    }
-
-    void InstantiateRightDataPoints(Vector3Int pos)
-    {
-        Vector3Int rightPos = new Vector3Int(pos.x + 1, pos.y, pos.z);
-        if (tilemap.GetTile(rightPos) == null)
-        {
-            // Create more data points to the right
-            dataPointCount++;
-        }
-    }
-
-    void InstantiateUpDataPoints(Vector3Int pos)
-    {
-        Vector3Int upPos = new Vector3Int(pos.x, pos.y + 1, pos.z);
-        if (tilemap.GetTile(upPos) == null)
-        {
-            // Create more data points in the upwards direction
-            dataPointCount++;
-        }
     }
 
     void IncrementPlayerPickupCount()
@@ -114,6 +83,13 @@ public class GameMaster : MonoBehaviour
         // check if >=
     }
 
+    /// <summary>
+    /// Checks if two Vector3 vars are almost equal.
+    /// </summary>
+    /// <param name="pos1"></param>
+    /// <param name="pos2"></param>
+    /// <param name="leeway">The float value leeway for comparing two positions.</param>
+    /// <returns></returns>
     private bool AlmostEqual(Vector3 pos1, Vector3 pos2, float leeway)
     {
         return pos1.x > pos2.x - leeway && pos1.x < pos2.x + leeway && pos1.y > pos2.y - leeway && pos1.y < pos2.y + leeway;
