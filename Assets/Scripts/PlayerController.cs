@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     private float playerHalfWidth;
     private const float hitDstOffset = 0.001f;
     private enum Direction { UP, DOWN, LEFT, RIGHT }
+    private Camera cam;
+    private float camHeight;
+    private float camWidth;
 
     public delegate void OnDataPickup();
     public static event OnDataPickup onDataPickup;
@@ -23,6 +26,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
+        cam = Camera.main;
+
+        camHeight = 2f * cam.orthographicSize;
+        camWidth = camHeight * cam.aspect;
 
         playerHalfWidth = boxCollider.bounds.max.y - boxCollider.bounds.center.y;
     }
@@ -45,14 +52,35 @@ public class PlayerController : MonoBehaviour
     {
         RaycastHit2D hit = ForwardsRaycast();
 
+        HandleScreenWrapping(hit);
+
         if (hit)
         {
             transform.Translate(Vector2.up * hit.distance);
-
         }
         else
         {
             transform.Translate(Vector2.up * speed * Time.deltaTime);
+        }
+    }
+
+    private void HandleScreenWrapping(RaycastHit2D hit)
+    {
+        if ((transform.position + Vector3.up * hit.distance).y > camHeight)
+        {
+            transform.position = new Vector3(transform.position.x, 0);
+        }
+        if ((transform.position + Vector3.down * hit.distance).y < 0)
+        {
+            transform.position = new Vector3(transform.position.x, camHeight);
+        }
+        if ((transform.position + Vector3.left * hit.distance).x < 0)
+        {
+            transform.position = new Vector3(camWidth, transform.position.y);
+        }
+        if ((transform.position + Vector3.right * hit.distance).x > camWidth)
+        {
+            transform.position = new Vector3(0, transform.position.y);
         }
     }
 
@@ -132,6 +160,8 @@ public class PlayerController : MonoBehaviour
                     shouldTurn = true;
                 }
             }
+
+            print(shouldTurn); // always false ???
 
             if (hit1.distance > hitDstOffset && hit2.distance > hitDstOffset || shouldTurn)
             {
