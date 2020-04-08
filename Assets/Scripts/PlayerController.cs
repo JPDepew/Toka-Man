@@ -145,23 +145,21 @@ public class PlayerController : MonoBehaviour
         {
             (RaycastHit2D hit1, RaycastHit2D hit2, RaycastHit2D hitMid) = RaycastsBasedOnDirection(direction);
 
-            if (hit1.distance > 0.01f)
+            if (hit1.distance > 0.01f || hit1.collider == null)
             {
                 leftRayClear = true;
             }
-            if (hit2.distance > 0.01f)
+            if (hit2.distance > 0.01f || hit2.collider == null)
             {
                 rightRayClear = true;
             }
             if (leftRayClear && rightRayClear)
             {
-                if (hitMid.distance > 0.01f)
+                if (hitMid.distance > 0.01f || hitMid.collider == null)
                 {
                     shouldTurn = true;
                 }
             }
-
-            print(shouldTurn); // always false ???
 
             if (hit1.distance > hitDstOffset && hit2.distance > hitDstOffset || shouldTurn)
             {
@@ -179,31 +177,32 @@ public class PlayerController : MonoBehaviour
         Vector2 vector2;
         Vector2 vectorMid;
         Vector2 directionVector;
+        float length = 100;
         switch (direction)
         {
             case Direction.UP:
                 vector1 = new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.max.y);
                 vector2 = new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.max.y);
                 vectorMid = new Vector2(boxCollider.bounds.center.x - boundsOffset, boxCollider.bounds.max.y);
-                directionVector = Vector2.up;
+                directionVector = Vector2.up * length;
                 break;
             case Direction.DOWN:
                 vector1 = new Vector2(boxCollider.bounds.min.x + boundsOffset, boxCollider.bounds.min.y);
                 vector2 = new Vector2(boxCollider.bounds.max.x - boundsOffset, boxCollider.bounds.min.y);
                 vectorMid = new Vector2(boxCollider.bounds.center.x - boundsOffset, boxCollider.bounds.min.y);
-                directionVector = Vector2.down;
+                directionVector = Vector2.down * length;
                 break;
             case Direction.LEFT:
                 vector1 = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.min.y + boundsOffset);
                 vector2 = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.max.y - boundsOffset);
                 vectorMid = new Vector2(boxCollider.bounds.min.x, boxCollider.bounds.center.y - boundsOffset);
-                directionVector = Vector2.left;
+                directionVector = Vector2.left * length;
                 break;
             case Direction.RIGHT:
                 vector1 = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.min.y + boundsOffset);
                 vector2 = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.max.y - boundsOffset);
                 vectorMid = new Vector2(boxCollider.bounds.max.x, boxCollider.bounds.center.y - boundsOffset);
-                directionVector = Vector2.right;
+                directionVector = Vector2.right * length;
                 break;
             default:
                 vector1 = new Vector2();
